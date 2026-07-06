@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +16,10 @@
             <nav>
                 <a href="/">Accueil</a>
                 <a href="/galleries">Galeries</a>
+                <a href="/contact">Contact</a>
+                <a sec:authorize="isAuthenticated()" href="/galleries/new" style="background:var(--accent);color:#fff;border-radius:8px;padding:0.5rem 1rem">+ Nouvelle</a>
+                <a sec:authorize="isAuthenticated()" href="/logout" style="opacity:0.6">Déconnexion</a>
+                <a sec:authorize="!isAuthenticated()" href="/login" style="opacity:0.6">Admin</a>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
             </nav>
         </div>
@@ -29,8 +33,8 @@
                 <p class="meta" th:text="'Créée le ' + ${#temporals.format(gallery.createdAt, 'dd MMMM yyyy')} + ' · ' + ${#lists.size(photos)} + ' photo(s)'">Date</p>
             </div>
             <div class="header-actions">
-                <a th:href="@{/galleries/{id}/upload(id=${gallery.id})}" class="btn btn-primary">+ Ajouter des photos</a>
-                <a th:href="@{/galleries/{id}/delete(id=${gallery.id})}" class="btn btn-danger"
+                <a sec:authorize="isAuthenticated()" th:href="@{/galleries/{id}/upload(id=${gallery.id})}" class="btn btn-primary">+ Ajouter des photos</a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/galleries/{id}/delete(id=${gallery.id})}" class="btn btn-danger"
                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette galerie et toutes ses photos ?')">Supprimer</a>
                 <a href="/galleries" class="btn btn-secondary">← Retour</a>
             </div>
@@ -45,7 +49,7 @@
                          th:data-index="${iter.index}">
                     <div class="photo-info">
                         <span class="photo-title" th:text="${photo.title != null ? photo.title : photo.fileName}">Titre</span>
-                        <a th:href="@{/photos/{id}/delete(id=${photo.id})}" class="btn-delete"
+                        <a sec:authorize="isAuthenticated()" th:href="@{/photos/{id}/delete(id=${photo.id})}" class="btn-delete"
                            onclick="event.stopPropagation(); return confirm('Supprimer cette photo ?')">&times;</a>
                     </div>
                 </div>
@@ -54,7 +58,7 @@
 
         <div class="empty-state" th:if="${#lists.isEmpty(photos)}">
             <p>Cette galerie est vide.</p>
-            <a th:href="@{/galleries/{id}/upload(id=${gallery.id})}" class="btn btn-primary">Ajouter des photos</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/galleries/{id}/upload(id=${gallery.id})}" class="btn btn-primary">Ajouter des photos</a>
         </div>
     </main>
 

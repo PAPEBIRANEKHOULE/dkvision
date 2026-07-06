@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DK-VISION - Nouvelle galerie</title>
+    <title>DK-VISION - Connexion</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -17,35 +17,36 @@
                 <a href="/">Accueil</a>
                 <a href="/galleries">Galeries</a>
                 <a href="/contact">Contact</a>
-                <a sec:authorize="isAuthenticated()" href="/galleries/new" style="background:var(--accent);color:#fff;border-radius:8px;padding:0.5rem 1rem">+ Nouvelle</a>
-                <a sec:authorize="isAuthenticated()" href="/logout" style="opacity:0.6">Déconnexion</a>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
             </nav>
         </div>
     </header>
 
     <main class="container">
-        <div class="page-header">
-            <h2>Créer une nouvelle galerie</h2>
-            <a href="/galleries" class="btn btn-secondary">← Retour</a>
-        </div>
+        <div class="form-container reveal" style="max-width:420px">
+            <h2 style="text-align:center;margin-bottom:1.5rem">Connexion Admin</h2>
 
-        <div class="form-container reveal">
-            <form th:action="@{/galleries}" th:object="${gallery}" method="post" class="styled-form">
+            <div class="error-message" th:if="${param.error != null}">
+                <p>Identifiants incorrects</p>
+            </div>
+            <div class="success-message" th:if="${param.logout != null}">
+                <p>Vous êtes déconnecté</p>
+            </div>
+
+            <form th:action="@{/login}" method="post" class="styled-form">
                 <div class="form-group">
-                    <label for="name">Nom de la galerie *</label>
-                    <input type="text" id="name" th:field="*{name}" placeholder="Ex: Voyage à Paris, Mariage, Portrait..." required>
-                    <p class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Erreur</p>
+                    <label for="username">Identifiant</label>
+                    <input type="text" id="username" name="username" placeholder="admin" required autofocus>
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description (optionnelle)</label>
-                    <textarea id="description" th:field="*{description}" rows="4" placeholder="Ajoutez une description à votre galerie..."></textarea>
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" placeholder="Mot de passe" required>
                 </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Créer la galerie</button>
-                    <a href="/galleries" class="btn btn-secondary">Annuler</a>
+                <div class="form-actions" style="flex-direction:column">
+                    <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Se connecter</button>
+                    <a href="/" class="btn btn-secondary" style="width:100%;justify-content:center">← Retour à l'accueil</a>
                 </div>
             </form>
         </div>
@@ -54,8 +55,8 @@
     <footer>
         <div class="container">
             <div class="footer-contact">
-                <a href="https://wa.me/221774844340" target="_blank" class="whatsapp-link" title="Contactez-nous sur WhatsApp">&#128242; +221 77 484 43 40</a>
-                <a href="https://wa.me/221786754171" target="_blank" class="whatsapp-link" title="Contactez-nous sur WhatsApp">&#128242; +221 78 675 41 71</a>
+                <a href="https://wa.me/221774844340" target="_blank" class="whatsapp-link">&#128242; +221 77 484 43 40</a>
+                <a href="https://wa.me/221786754171" target="_blank" class="whatsapp-link">&#128242; +221 78 675 41 71</a>
             </div>
             <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> DK-VISION. Tous droits réservés.</p>
         </div>

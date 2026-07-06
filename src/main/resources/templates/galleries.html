@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +16,10 @@
             <nav>
                 <a href="/">Accueil</a>
                 <a href="/galleries">Galeries</a>
+                <a href="/contact">Contact</a>
+                <a sec:authorize="isAuthenticated()" href="/galleries/new" style="background:var(--accent);color:#fff;border-radius:8px;padding:0.5rem 1rem">+ Nouvelle</a>
+                <a sec:authorize="isAuthenticated()" href="/logout" style="opacity:0.6">Déconnexion</a>
+                <a sec:authorize="!isAuthenticated()" href="/login" style="opacity:0.6">Admin</a>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
             </nav>
         </div>
@@ -32,7 +36,7 @@
                     <span class="search-icon">🔍</span>
                     <input type="text" id="gallery-search" placeholder="Rechercher une galerie...">
                 </div>
-                <a href="/galleries/new" class="btn btn-primary">+ Nouvelle galerie</a>
+                <a sec:authorize="isAuthenticated()" href="/galleries/new" class="btn btn-primary">+ Nouvelle galerie</a>
             </div>
         </div>
 
@@ -61,7 +65,7 @@
 
         <div class="empty-state" th:if="${#lists.isEmpty(galleries)}">
             <p>Aucune galerie pour le moment.</p>
-            <a href="/galleries/new" class="btn btn-primary">Créer votre première galerie</a>
+            <a sec:authorize="isAuthenticated()" href="/galleries/new" class="btn btn-primary">Créer votre première galerie</a>
         </div>
 
         <div class="empty-state" id="search-empty">

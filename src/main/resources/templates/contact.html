@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DK-VISION - Contact</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo" style="text-decoration:none">
+                <h1>DK-VISION</h1>
+                <span class="tagline">Photographie</span>
+            </a>
+            <nav>
+                <a href="/">Accueil</a>
+                <a href="/galleries">Galeries</a>
+                <a href="/contact" class="active">Contact</a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Contactez-nous</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:960px;margin:0 auto" class="contact-split">
+            <div class="reveal">
+                <div style="background:var(--bg-card);padding:2rem;border-radius:var(--radius);border:1px solid var(--border-light);height:100%">
+                    <h3 style="margin-bottom:1rem">Informations</h3>
+
+                    <div style="margin-bottom:1.5rem">
+                        <p style="color:var(--text-secondary);margin-bottom:0.5rem;font-size:0.9rem">Téléphone / WhatsApp</p>
+                        <p style="font-weight:600;margin-bottom:0.3rem">
+                            <a href="https://wa.me/221774844340" target="_blank" class="whatsapp-link">&#128242; +221 77 484 43 40</a>
+                        </p>
+                        <p style="font-weight:600">
+                            <a href="https://wa.me/221786754171" target="_blank" class="whatsapp-link">&#128242; +221 78 675 41 71</a>
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom:1.5rem">
+                        <p style="color:var(--text-secondary);margin-bottom:0.5rem;font-size:0.9rem">Email</p>
+                        <p style="font-weight:600">contact@dk-vision.com</p>
+                    </div>
+
+                    <div>
+                        <p style="color:var(--text-secondary);margin-bottom:0.5rem;font-size:0.9rem">Localisation</p>
+                        <p style="font-weight:600">Dakar, Sénégal</p>
+                    </div>
+
+                    <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+                        <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6">
+                            Pour toute demande d'information, de devis ou de réservation de séance photo, n'hésitez pas à nous contacter via WhatsApp ou via le formulaire ci-contre.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-container reveal" style="margin:0">
+                <div class="success-message" th:if="${param.success != null}">
+                    <p>Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.</p>
+                </div>
+
+                <form th:action="@{/contact}" th:object="${contactMessage}" method="post" class="styled-form" th:unless="${param.success != null}">
+                    <div class="form-group">
+                        <label for="name">Nom *</label>
+                        <input type="text" id="name" th:field="*{name}" placeholder="Votre nom" required>
+                        <p class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Erreur</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" th:field="*{email}" placeholder="votre@email.com" required>
+                        <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Erreur</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Téléphone (optionnel)</label>
+                        <input type="text" id="phone" th:field="*{phone}" placeholder="+221 77 XXX XX XX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" th:field="*{message}" rows="5" placeholder="Votre message..." required></textarea>
+                        <p class="error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Erreur</p>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Envoyer le message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-contact">
+                <a href="https://wa.me/221774844340" target="_blank" class="whatsapp-link">&#128242; +221 77 484 43 40</a>
+                <a href="https://wa.me/221786754171" target="_blank" class="whatsapp-link">&#128242; +221 78 675 41 71</a>
+            </div>
+            <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> DK-VISION. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('dkvision-theme', next);
+            document.querySelector('.theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            var saved = localStorage.getItem('dkvision-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+            if (saved === 'dark') document.querySelector('.theme-toggle').textContent = '☀️';
+        })();
+    </script>
+</body>
+</html>

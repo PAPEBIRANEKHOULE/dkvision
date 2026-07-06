@@ -869,6 +869,34 @@ main { flex: 1; padding: 2.5rem 0; }
 
 #search-empty { display: none; }
 
+/* Success Message */
+.success-message {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    padding: 1.5rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Contact Page */
+.contact-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .contact-split {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ====== Footer ====== */
 footer {
     background: var(--primary);

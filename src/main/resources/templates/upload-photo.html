@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +16,9 @@
             <nav>
                 <a href="/">Accueil</a>
                 <a href="/galleries">Galeries</a>
+                <a href="/contact">Contact</a>
+                <a sec:authorize="isAuthenticated()" href="/galleries/new" style="background:var(--accent);color:#fff;border-radius:8px;padding:0.5rem 1rem">+ Nouvelle</a>
+                <a sec:authorize="isAuthenticated()" href="/logout" style="opacity:0.6">Déconnexion</a>
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
             </nav>
         </div>
