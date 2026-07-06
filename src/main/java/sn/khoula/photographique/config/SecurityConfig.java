@@ -3,6 +3,7 @@ package sn.khoula.photographique.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -12,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -29,22 +30,22 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    new AntPathRequestMatcher("/galleries/new"),
-                    new AntPathRequestMatcher("/galleries/**/upload", "GET"),
-                    new AntPathRequestMatcher("/galleries/**/upload", "POST"),
-                    new AntPathRequestMatcher("/galleries/**/delete"),
-                    new AntPathRequestMatcher("/photos/**/delete")
+                    PathPatternRequestMatcher.pathPattern("/galleries/new"),
+                    PathPatternRequestMatcher.pathPattern("/galleries/{id}/upload"),
+                    PathPatternRequestMatcher.pathPattern("/galleries/{id}/delete"),
+                    PathPatternRequestMatcher.pathPattern("/photos/{id}/delete")
                 ).authenticated()
                 .requestMatchers(
-                    new AntPathRequestMatcher("/"),
-                    new AntPathRequestMatcher("/galleries"),
-                    new AntPathRequestMatcher("/galleries/**"),
-                    new AntPathRequestMatcher("/uploads/**"),
-                    new AntPathRequestMatcher("/contact"),
-                    new AntPathRequestMatcher("/css/**"),
-                    new AntPathRequestMatcher("/js/**"),
-                    new AntPathRequestMatcher("/health"),
-                    new AntPathRequestMatcher("/h2-console/**")
+                    PathPatternRequestMatcher.pathPattern("/"),
+                    PathPatternRequestMatcher.pathPattern("/galleries"),
+                    PathPatternRequestMatcher.pathPattern("/galleries/**"),
+                    PathPatternRequestMatcher.pathPattern("/uploads/**"),
+                    PathPatternRequestMatcher.pathPattern("/contact"),
+                    PathPatternRequestMatcher.pathPattern("/login"),
+                    PathPatternRequestMatcher.pathPattern("/css/**"),
+                    PathPatternRequestMatcher.pathPattern("/js/**"),
+                    PathPatternRequestMatcher.pathPattern("/health"),
+                    PathPatternRequestMatcher.pathPattern("/h2-console/**")
                 ).permitAll()
                 .anyRequest().authenticated()
             )
@@ -58,7 +59,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))
+                .ignoringRequestMatchers(PathPatternRequestMatcher.pathPattern("/h2-console/**"))
             )
             .headers(headers -> headers
                 .frameOptions(frame -> frame.sameOrigin())
