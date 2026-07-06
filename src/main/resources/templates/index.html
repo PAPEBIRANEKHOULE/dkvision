@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DK-VISION - Accueil</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo" style="text-decoration:none">
+                <h1>DK-VISION</h1>
+                <span class="tagline">Photographie</span>
+            </a>
+            <nav>
+                <a href="/">Accueil</a>
+                <a href="/galleries">Galeries</a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero reveal">
+            <h2>Bienvenue sur DK-VISION</h2>
+            <p>Votre plateforme de stockage et de partage de photos. Créez des galeries et organisez vos souvenirs.</p>
+            <a href="/galleries/new" class="btn btn-primary">+ Créer une galerie</a>
+        </section>
+
+        <section class="galleries-grid">
+            <div class="section-header">
+                <h3>Galeries récentes</h3>
+                <a href="/galleries" class="btn btn-secondary">Voir tout</a>
+            </div>
+            <div class="grid" th:if="${not #lists.isEmpty(galleries)}">
+                <div class="gallery-card reveal" th:each="gallery : ${galleries}">
+                    <a th:href="@{/galleries/{id}(id=${gallery.id})}" class="card-link">
+                        <div class="card-image">
+                            <div class="placeholder-image" th:if="${#lists.isEmpty(gallery.photos)}">
+                                <span>📷</span>
+                            </div>
+                            <img th:if="${not #lists.isEmpty(gallery.photos)}"
+                                 th:src="@{/uploads/{path}(path=${gallery.photos[0].filePath})}"
+                                 th:alt="${gallery.name}">
+                            <div class="card-overlay">
+                                <span class="photo-count" th:text="${gallery.photoCount} + ' photo(s)'">0 photos</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4 th:text="${gallery.name}">Nom de la galerie</h4>
+                            <p class="date" th:text="${#temporals.format(gallery.createdAt, 'dd MMMM yyyy')}">Date</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="empty-state" th:if="${#lists.isEmpty(galleries)}">
+                <p>Aucune galerie pour le moment.</p>
+                <a href="/galleries/new" class="btn btn-primary">Créer votre première galerie</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-contact">
+                <a href="https://wa.me/221774844340" target="_blank" class="whatsapp-link" title="Contactez-nous sur WhatsApp">&#128242; +221 77 484 43 40</a>
+                <a href="https://wa.me/221786754171" target="_blank" class="whatsapp-link" title="Contactez-nous sur WhatsApp">&#128242; +221 78 675 41 71</a>
+            </div>
+            <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> DK-VISION. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('dkvision-theme', next);
+            document.querySelector('.theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            var saved = localStorage.getItem('dkvision-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+            if (saved === 'dark') document.querySelector('.theme-toggle').textContent = '☀️';
+        })();
+    </script>
+</body>
+</html>

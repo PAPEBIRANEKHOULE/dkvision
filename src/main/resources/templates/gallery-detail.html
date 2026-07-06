@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'DK-VISION - ' + ${gallery.name}">DK-VISION - Galerie</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo" style="text-decoration:none">
+                <h1>DK-VISION</h1>
+                <span class="tagline">Photographie</span>
+            </a>
+            <nav>
+                <a href="/">Accueil</a>
+                <a href="/galleries">Galeries</a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h2 th:text="${gallery.name}">Nom</h2>
+                <p class="meta" th:if="${gallery.description}" th:text="${gallery.description}">Description</p>
+                <p class="meta" th:text="'Créée le ' + ${#temporals.format(gallery.createdAt, 'dd MMMM yyyy')} + ' · ' + ${#lists.size(photos)} + ' photo(s)'">Date</p>
+            </div>
+            <div class="header-actions">
+                <a th:href="@{/galleries/{id}/upload(id=${gallery.id})}" class="btn btn-primary">+ Ajouter des photos</a>
+                <a th:href="@{/galleries/{id}/delete(id=${gallery.id})}" class="btn btn-danger"
+                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette galerie et toutes ses photos ?')">Supprimer</a>
+                <a href="/galleries" class="btn btn-secondary">← Retour</a>
+            </div>
+        </div>
+
+        <div class="photo-grid" th:if="${not #lists.isEmpty(photos)}">
+            <div class="photo-item reveal" th:each="photo, iter : ${photos}">
+                <div class="photo-wrapper">
+                    <img th:src="@{/uploads/{path}(path=${photo.filePath})}"
+                         th:alt="${photo.title != null ? photo.title : photo.fileName}"
+                         th:data-title="${photo.title != null ? photo.title : photo.fileName}"
+                         th:data-index="${iter.index}">
+                    <div class="photo-info">
+                        <span class="photo-title" th:text="${photo.title != null ? photo.title : photo.fileName}">Titre</span>
+                        <a th:href="@{/photos/{id}/delete(id=${photo.id})}" class="btn-delete"
+                           onclick="event.stopPropagation(); return confirm('Supprimer cette photo ?')">&times;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(photos)}">
+            <p>Cette galerie est vide.</p>
+            <a th:href="@{/galleries/{id}/upload(id=${gallery.id})}" class="btn btn-primary">Ajouter des photos</a>
+        </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="photoModal" class="modal">
+        <button class="modal-close">&times;</button>
+        <button class="modal-nav modal-prev">‹</button>
+        <button class="modal-nav modal-next">›</button>
+        <span id="photoCounter"></span>
+        <img class="modal-content" id="modalImage">
+        <div id="modalCaption"></div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-contact">
+                <a href="https://wa.me/221774844340" target="_blank" class="whatsapp-link" title="Contactez-nous sur WhatsApp">&#128242; +221 77 484 43 40</a>
+                <a href="https://wa.me/221786754171" target="_blank" class="whatsapp-link" title="Contactez-nous sur WhatsApp">&#128242; +221 78 675 41 71</a>
+            </div>
+            <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> DK-VISION. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('dkvision-theme', next);
+            document.querySelector('.theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            var saved = localStorage.getItem('dkvision-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+            if (saved === 'dark') document.querySelector('.theme-toggle').textContent = '☀️';
+        })();
+    </script>
+</body>
+</html>

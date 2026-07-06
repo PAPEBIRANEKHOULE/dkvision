@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'DK-VISION - Ajouter des photos à ' + ${gallery.name}">DK-VISION - Upload</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo" style="text-decoration:none">
+                <h1>DK-VISION</h1>
+                <span class="tagline">Photographie</span>
+            </a>
+            <nav>
+                <a href="/">Accueil</a>
+                <a href="/galleries">Galeries</a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Ajouter des photos à <span th:text="${gallery.name}">Galerie</span></h2>
+            <a th:href="@{/galleries/{id}(id=${gallery.id})}" class="btn btn-secondary">← Retour à la galerie</a>
+        </div>
+
+        <div class="form-container reveal">
+            <div class="error-message" th:if="${error != null}">
+                <p th:text="${error}">Erreur</p>
+            </div>
+
+            <form th:action="@{/galleries/{id}/upload(id=${gallery.id})}" method="post" enctype="multipart/form-data" class="styled-form">
+                <div class="form-group">
+                    <label>Titre des photos (optionnel)</label>
+                    <input type="text" id="title" name="title" placeholder="Ex: Coucher de soleil, Portrait...">
+                </div>
+
+                <div class="form-group">
+                    <label>Choisir des photos *</label>
+
+                    <!-- Drag & Drop Zone -->
+                    <div class="drop-zone" id="drop-zone">
+                        <span class="drop-zone-icon">📸</span>
+                        <p class="drop-zone-text">Glissez-déposez vos photos ici ou <strong>parcourez</strong></p>
+                        <p class="drop-zone-hint">JPG, PNG, GIF, WebP — 10 MB max par fichier</p>
+                    </div>
+
+                    <div class="file-input-wrapper" style="margin-top:0.75rem">
+                        <input type="file" id="file" name="file" accept="image/jpeg,image/png,image/gif,image/webp" multiple>
+                        <label for="file" class="file-label">Parcourir...</label>
+                        <span class="file-name">Aucun fichier sélectionné</span>
+                    </div>
+                </div>
+
+                <div id="upload-preview" class="upload-preview"></div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Uploader</button>
+                    <a th:href="@{/galleries/{id}(id=${gallery.id})}" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-contact">
+                <a href="https://wa.me/221774844340" target="_blank" class="whatsapp-link" title="Contactez-nous sur WhatsApp">&#128242; +221 77 484 43 40</a>
+                <a href="https://wa.me/221786754171" target="_blank" class="whatsapp-link" title="Contactez-nous sur WhatsApp">&#128242; +221 78 675 41 71</a>
+            </div>
+            <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> DK-VISION. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('dkvision-theme', next);
+            document.querySelector('.theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            var saved = localStorage.getItem('dkvision-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+            if (saved === 'dark') document.querySelector('.theme-toggle').textContent = '☀️';
+        })();
+    </script>
+</body>
+</html>

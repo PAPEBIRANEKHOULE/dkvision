@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: dk-vision
+    runtime: image
+    repo: https://github.com/khoulA/dk-vision
+    plan: free
+    dockerfilePath: ./Dockerfile
+    region: frankfurt
+    healthCheckPath: /health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
