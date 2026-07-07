@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'DK-VISION - Modifier ' + ${gallery.name}">DK-VISION - Modifier</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo" style="text-decoration:none">
+                <h1>DK-VISION</h1>
+                <span class="tagline">Photographie</span>
+                <span class="author">PAPABIZ</span>
+            </a>
+            <nav>
+                <a href="/">Accueil</a>
+                <a href="/galleries">Galeries</a>
+                <a href="/contact">Contact</a>
+                <a sec:authorize="isAuthenticated()" href="/galleries/new" style="background:var(--accent);color:#fff;border-radius:8px;padding:0.5rem 1rem">+ Nouvelle</a>
+                <a sec:authorize="isAuthenticated()" href="/logout" style="opacity:0.6">Déconnexion</a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Mode sombre">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Modifier la galerie</h2>
+            <a th:href="@{/galleries/{id}(id=${gallery.id})}" class="btn btn-secondary">← Retour</a>
+        </div>
+
+        <div class="form-container reveal">
+            <form th:action="@{/galleries/{id}/edit(id=${gallery.id})}" th:object="${gallery}" method="post" class="styled-form">
+                <div class="form-group">
+                    <label for="name">Nom de la galerie *</label>
+                    <input type="text" id="name" th:field="*{name}" placeholder="Ex: Voyage à Paris, Mariage, Portrait..." required>
+                    <p class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Erreur</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description (optionnelle)</label>
+                    <textarea id="description" th:field="*{description}" rows="4" placeholder="Ajoutez une description à votre galerie..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <a th:href="@{/galleries/{id}(id=${gallery.id})}" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-contact">
+                <a href="https://wa.me/221774844340" target="_blank" class="whatsapp-link">&#128242; +221 77 484 43 40</a>
+                <a href="https://wa.me/221786754171" target="_blank" class="whatsapp-link">&#128242; +221 78 675 41 71</a>
+            </div>
+            <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> DK-VISION. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('dkvision-theme', next);
+            document.querySelector('.theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+        (function() {
+            var saved = localStorage.getItem('dkvision-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+            if (saved === 'dark') document.querySelector('.theme-toggle').textContent = '☀️';
+        })();
+    </script>
+</body>
+</html>

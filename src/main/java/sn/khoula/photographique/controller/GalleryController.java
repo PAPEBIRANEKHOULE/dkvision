@@ -67,4 +67,34 @@ public class GalleryController {
         galleryService.deleteById(id);
         return "redirect:/galleries";
     }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Optional<Gallery> galleryOpt = galleryService.findById(id);
+        if (galleryOpt.isEmpty()) {
+            return "redirect:/galleries";
+        }
+        model.addAttribute("gallery", galleryOpt.get());
+        model.addAttribute("activePage", "galleries");
+        return "edit-gallery";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateGallery(@PathVariable Long id,
+                                @Valid @ModelAttribute Gallery gallery,
+                                BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("activePage", "galleries");
+            return "edit-gallery";
+        }
+        Optional<Gallery> existingOpt = galleryService.findById(id);
+        if (existingOpt.isEmpty()) {
+            return "redirect:/galleries";
+        }
+        Gallery existing = existingOpt.get();
+        existing.setName(gallery.getName());
+        existing.setDescription(gallery.getDescription());
+        galleryService.save(existing);
+        return "redirect:/galleries/" + id;
+    }
 }

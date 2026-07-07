@@ -34,6 +34,8 @@ public class SecurityConfig {
                     PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/galleries"),
                     PathPatternRequestMatcher.pathPattern("/galleries/{id}/upload"),
                     PathPatternRequestMatcher.pathPattern("/galleries/{id}/delete"),
+                    PathPatternRequestMatcher.pathPattern("/galleries/{id}/edit"),
+                    PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/galleries/{id}/edit"),
                     PathPatternRequestMatcher.pathPattern("/photos/{id}/delete")
                 ).authenticated()
                 .requestMatchers(

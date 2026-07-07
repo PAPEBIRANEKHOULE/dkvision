@@ -35,6 +35,7 @@
             </div>
             <div class="header-actions">
                 <a sec:authorize="isAuthenticated()" th:href="@{/galleries/{id}/upload(id=${gallery.id})}" class="btn btn-primary">+ Ajouter des photos</a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/galleries/{id}/edit(id=${gallery.id})}" class="btn btn-secondary">Modifier</a>
                 <a sec:authorize="isAuthenticated()" th:href="@{/galleries/{id}/delete(id=${gallery.id})}" class="btn btn-danger"
                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette galerie et toutes ses photos ?')">Supprimer</a>
                 <a href="/galleries" class="btn btn-secondary">← Retour</a>
